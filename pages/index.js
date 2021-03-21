@@ -17,6 +17,33 @@ const StyledH1 = styled.h1`
   text-transform: uppercase;
 `;
 
+// Messafe
+const StyledH2 = styled.h2`
+  padding: 1rem;
+  color: var(--color-4);
+  background-color: var(--color-2);
+  font-weight: bolder;
+  font-size: small;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 1;
+  animation: blink-animation 1.5s ease-in-out infinite;
+
+  @keyframes blink-animation {
+    0% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+`;
+
 // Button
 const StyledButton = styled.button`
   margin-bottom: 2rem;
@@ -91,10 +118,14 @@ const StyledLostGuy = styled(LostGuyIcon, {
 const StyledFlagIcon = styled(FlagIcon)`
   width: 80%;
   height: 80%;
-  padding: 0.5rem;
+  padding: 0.1rem;
   color: var(--color-6);
   background-color: var(--color-1);
   border-radius: 3px;
+
+  @media screen and (min-width: 600px) {
+    padding: 0.2rem;
+  }
 `;
 
 const Home = () => {
@@ -108,6 +139,7 @@ const Home = () => {
   // State
   const [mazeArray, setMazeArray] = useState([]);
   const [lostGuyPosition, setLostGuyPosition] = useState(0);
+  const [hideMessage, setHideMessage] = useState(false);
 
   // Keyboard Function
   const handleKeyDown = (event) => {
@@ -141,6 +173,14 @@ const Home = () => {
   useEffect(() => {
     const newMaze = generateNewMaze();
     setMazeArray(newMaze);
+
+    // Hide Message after 7 seconds
+    const timer = setTimeout(() => setHideMessage(true), 7000);
+
+    // Clean Up Timer
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   // Add Event Listener
@@ -165,6 +205,9 @@ const Home = () => {
         <meta name="description" content="Cool Maze Game" />
       </Head>
       <StyledPageMain>
+        {hideMessage ? null : (
+          <StyledH2>This App does not work on touchscreen devices</StyledH2>
+        )}
         <StyledH1>
           {lostGuyPosition !== 59 ? "Maze is Amazing" : "Congrats, you won !"}
         </StyledH1>
